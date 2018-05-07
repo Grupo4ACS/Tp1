@@ -20,13 +20,13 @@ namespace Tp1.Controllers
         }
 
         // GET: Users
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string sortOrder)
         {
             return View(await _context.Users.ToListAsync());
         }
 
         // GET: Users/Details/5
-        public async Task<IActionResult> Details(string id)
+        public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
             {
@@ -34,6 +34,8 @@ namespace Tp1.Controllers
             }
 
             var user = await _context.Users
+                // Agregando los posts
+                .Include(p=>p.Posts).AsNoTracking()
                 .SingleOrDefaultAsync(m => m.ID == id);
             if (user == null)
             {
@@ -54,19 +56,29 @@ namespace Tp1.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("ID,FirstName,LastName")] User user)
+        public async Task<IActionResult> Create([Bind("FirstName,LastName")] User user)
         {
-            if (ModelState.IsValid)
+            try
             {
-                _context.Add(user);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                if (ModelState.IsValid)
+                {
+                    _context.Add(user);
+                    await _context.SaveChangesAsync();
+                    return RedirectToAction(nameof(Index));
+                }
+            }
+            catch (DbUpdateException /* ex */)
+            {
+                //Log the error (uncomment ex variable name and write a log.
+                ModelState.AddModelError("", "Unable to save changes. " +
+                    "Try again, and if the problem persists " +
+                    "see your system administrator.");
             }
             return View(user);
         }
 
         // GET: Users/Edit/5
-        public async Task<IActionResult> Edit(string id)
+        public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
             {
@@ -86,7 +98,7 @@ namespace Tp1.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(string id, [Bind("ID,FirstName,LastName")] User user)
+        public async Task<IActionResult> Edit(int id, [Bind("ID,FirstName,LastName")] User user)
         {
             if (id != user.ID)
             {
@@ -117,7 +129,7 @@ namespace Tp1.Controllers
         }
 
         // GET: Users/Delete/5
-        public async Task<IActionResult> Delete(string id)
+        public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
             {
@@ -137,7 +149,7 @@ namespace Tp1.Controllers
         // POST: Users/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(string id)
+        public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var user = await _context.Users.SingleOrDefaultAsync(m => m.ID == id);
             _context.Users.Remove(user);
@@ -145,7 +157,7 @@ namespace Tp1.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        private bool UserExists(string id)
+        private bool UserExists(int id)
         {
             return _context.Users.Any(e => e.ID == id);
         }

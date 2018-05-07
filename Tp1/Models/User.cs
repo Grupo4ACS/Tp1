@@ -7,7 +7,7 @@ namespace Tp1.Models
 {
     public class User
     {
-        public string ID { get; set; }
+        public int ID { get; set; }
 
         public string FirstName { get; set; }
 
