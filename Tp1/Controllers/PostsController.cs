@@ -152,9 +152,19 @@ namespace Tp1.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        //private bool PostExists(string id)
-        //{
-        //    return _context.Posts.Any(e => e.ID == id);
-        //}
+        private bool PostExists(string id)
+        {
+            //    return _context.Posts.Any(e => e.ID == id);
+
+            if (_unitOfWork.PostRepository.GetById(id) == null)
+            {
+                return false;
+            }
+            else
+            {
+                return true;
+            }
+            
+        }
     }
 }

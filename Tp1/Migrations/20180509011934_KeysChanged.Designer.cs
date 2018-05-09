@@ -11,9 +11,10 @@ using Tp1.Data;
 namespace Tp1.Migrations
 {
     [DbContext(typeof(Tp1Context))]
-    partial class Tp1ContextModelSnapshot : ModelSnapshot
+    [Migration("20180509011934_KeysChanged")]
+    partial class KeysChanged
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
