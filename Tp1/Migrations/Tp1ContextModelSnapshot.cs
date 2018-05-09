@@ -22,7 +22,7 @@ namespace Tp1.Migrations
 
             modelBuilder.Entity("Tp1.Models.Post", b =>
                 {
-                    b.Property<string>("ID")
+                    b.Property<int>("ID")
                         .ValueGeneratedOnAdd();
 
                     b.Property<string>("Content");

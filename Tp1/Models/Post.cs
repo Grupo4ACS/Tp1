@@ -7,7 +7,7 @@ namespace Tp1.Models
 {
     public class Post
     {
-        public string ID { get; set; }
+        public int ID { get; set; }
 
         public User User { get; set; }
 

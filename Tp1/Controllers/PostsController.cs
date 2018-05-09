@@ -26,7 +26,7 @@ namespace Tp1.Controllers
         }
 
         // GET: Posts/Details/5
-        public async Task<IActionResult> Details(string id)
+        public async Task<IActionResult> Details(int id)
         {
             if (id == null)
             {
@@ -68,7 +68,7 @@ namespace Tp1.Controllers
         }
 
         // GET: Posts/Edit/5
-        public async Task<IActionResult> Edit(string id)
+        public async Task<IActionResult> Edit(int id)
         {
             if (id == null)
             {
@@ -89,7 +89,7 @@ namespace Tp1.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(string id, [Bind("ID,Content")] Post post)
+        public async Task<IActionResult> Edit(int id, [Bind("ID,Content")] Post post)
         {
             if (id != post.ID)
             {
@@ -122,7 +122,7 @@ namespace Tp1.Controllers
         }
 
         // GET: Posts/Delete/5
-        public async Task<IActionResult> Delete(string id)
+        public async Task<IActionResult> Delete(int id)
         {
             if (id == null)
             {
@@ -143,7 +143,7 @@ namespace Tp1.Controllers
         // POST: Posts/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(string id)
+        public async Task<IActionResult> DeleteConfirmed(int id)
         {
             //var post = await _context.Posts.SingleOrDefaultAsync(m => m.ID == id);
             //_context.Posts.Remove(post);
@@ -152,7 +152,7 @@ namespace Tp1.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        private bool PostExists(string id)
+        private bool PostExists(int id)
         {
             //    return _context.Posts.Any(e => e.ID == id);
 

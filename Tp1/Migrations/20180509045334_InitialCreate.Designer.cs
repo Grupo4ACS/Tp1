@@ -11,8 +11,8 @@ using Tp1.Data;
 namespace Tp1.Migrations
 {
     [DbContext(typeof(Tp1Context))]
-    [Migration("20180509022855_KeysChangedV2")]
-    partial class KeysChangedV2
+    [Migration("20180509045334_InitialCreate")]
+    partial class InitialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -23,7 +23,7 @@ namespace Tp1.Migrations
 
             modelBuilder.Entity("Tp1.Models.Post", b =>
                 {
-                    b.Property<string>("ID")
+                    b.Property<int>("ID")
                         .ValueGeneratedOnAdd();
 
                     b.Property<string>("Content");
