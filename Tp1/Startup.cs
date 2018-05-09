@@ -25,6 +25,8 @@ namespace Tp1
         {
             services.AddDbContext<Tp1Context>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
+            //Agregando Unit of Work
+            services.AddTransient<UnitOfWork>();
             services.AddMvc();
         }
 

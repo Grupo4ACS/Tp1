@@ -22,24 +22,7 @@
         <dd>
             @Html.DisplayFor(model => model.LastName)
         </dd>
-        <dt>
-            @Html.DisplayNameFor(model => model.Posts)
-        </dt>
-        <dd>
-            <table class="table">
-                <tr>
-                    <th>Posts</th>
-                </tr>
-                @foreach (var post in Model.Posts)
-                {
-                    <tr>
-                        <td>
-                            @Html.DisplayFor(modelItem => post.Content)
-                        </td>
-                    </tr>
-                }
-            </table>
-        </dd>
+        
     </dl>
 </div>
 <div>

@@ -12,17 +12,17 @@ namespace Tp1.Controllers
 {
     public class PostsController : Controller
     {
-        private readonly Tp1Context _context;
+        private readonly UnitOfWork _unitOfWork;
 
-        public PostsController(Tp1Context context)
+        public PostsController(UnitOfWork unitOfWork)
         {
-            _context = context;
+            _unitOfWork = unitOfWork;
         }
 
         // GET: Posts
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Posts.ToListAsync());
+            return View(_unitOfWork.PostRepository.Get());
         }
 
         // GET: Posts/Details/5
@@ -33,14 +33,14 @@ namespace Tp1.Controllers
                 return NotFound();
             }
 
-            var post = await _context.Posts
-                .SingleOrDefaultAsync(m => m.ID == id);
-            if (post == null)
-            {
-                return NotFound();
-            }
+            //var post = await _context.Posts
+            //    .SingleOrDefaultAsync(m => m.ID == id);
+            //if (post == null)
+            //{
+            //    return NotFound();
+            //}
 
-            return View(post);
+            return View(_unitOfWork.PostRepository.GetById(id));
         }
 
         // GET: Posts/Create
@@ -54,12 +54,14 @@ namespace Tp1.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("ID,Content")] Post post)
+        public async Task<IActionResult> Create([Bind("User,Content")] Post post)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(post);
-                await _context.SaveChangesAsync();
+                //_context.Add(post);
+                //await _context.SaveChangesAsync();
+                _unitOfWork.PostRepository.Insert(post);
+                _unitOfWork.save();
                 return RedirectToAction(nameof(Index));
             }
             return View(post);
@@ -73,7 +75,8 @@ namespace Tp1.Controllers
                 return NotFound();
             }
 
-            var post = await _context.Posts.SingleOrDefaultAsync(m => m.ID == id);
+            //var post = await _context.Posts.SingleOrDefaultAsync(m => m.ID == id);
+            var post = _unitOfWork.PostRepository.GetById(id);
             if (post == null)
             {
                 return NotFound();
@@ -97,8 +100,10 @@ namespace Tp1.Controllers
             {
                 try
                 {
-                    _context.Update(post);
-                    await _context.SaveChangesAsync();
+                    //_context.Update(post);
+                    //await _context.SaveChangesAsync();
+                    _unitOfWork.PostRepository.Update(post);
+                    _unitOfWork.save();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -124,8 +129,9 @@ namespace Tp1.Controllers
                 return NotFound();
             }
 
-            var post = await _context.Posts
-                .SingleOrDefaultAsync(m => m.ID == id);
+            //var post = await _context.Posts
+            //    .SingleOrDefaultAsync(m => m.ID == id);
+            var post = _unitOfWork.PostRepository.GetById(id);
             if (post == null)
             {
                 return NotFound();
@@ -139,15 +145,16 @@ namespace Tp1.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(string id)
         {
-            var post = await _context.Posts.SingleOrDefaultAsync(m => m.ID == id);
-            _context.Posts.Remove(post);
-            await _context.SaveChangesAsync();
+            //var post = await _context.Posts.SingleOrDefaultAsync(m => m.ID == id);
+            //_context.Posts.Remove(post);
+            //await _context.SaveChangesAsync();
+            _unitOfWork.PostRepository.Delete(id);
             return RedirectToAction(nameof(Index));
         }
 
-        private bool PostExists(string id)
-        {
-            return _context.Posts.Any(e => e.ID == id);
-        }
+        //private bool PostExists(string id)
+        //{
+        //    return _context.Posts.Any(e => e.ID == id);
+        //}
     }
 }

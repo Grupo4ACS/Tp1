@@ -12,37 +12,31 @@ namespace Tp1.Controllers
 {
     public class UsersController : Controller
     {
-        private readonly Tp1Context _context;
+        //private readonly Tp1Context _context;
+        private readonly UnitOfWork _unitOfWork;
 
-        public UsersController(Tp1Context context)
+        /*public UsersController(Tp1Context context)
         {
             _context = context;
-        }
+        }*/
 
-        // GET: Users
-        public async Task<IActionResult> Index(string sortOrder)
+        public UsersController(UnitOfWork unitOfWork)
         {
-            return View(await _context.Users.ToListAsync());
+            _unitOfWork = unitOfWork;
         }
 
+        //GET: Users
+        public ViewResult Index()
+        {
+            return View(_unitOfWork.UserRepository.Get());
+        }
+
+        
         // GET: Users/Details/5
-        public async Task<IActionResult> Details(int? id)
+
+        public ViewResult Details(int id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var user = await _context.Users
-                // Agregando los posts
-                .Include(p=>p.Posts).AsNoTracking()
-                .SingleOrDefaultAsync(m => m.ID == id);
-            if (user == null)
-            {
-                return NotFound();
-            }
-
-            return View(user);
+            return View(_unitOfWork.UserRepository.GetById(id));
         }
 
         // GET: Users/Create
@@ -51,6 +45,7 @@ namespace Tp1.Controllers
             return View();
         }
 
+        
         // POST: Users/Create
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
@@ -62,12 +57,14 @@ namespace Tp1.Controllers
             {
                 if (ModelState.IsValid)
                 {
-                    _context.Add(user);
-                    await _context.SaveChangesAsync();
+                    //_context.Add(user);
+                    //await _context.SaveChangesAsync();
+                    _unitOfWork.UserRepository.Insert(user);
+                    _unitOfWork.save();
                     return RedirectToAction(nameof(Index));
                 }
             }
-            catch (DbUpdateException /* ex */)
+            catch (DbUpdateException  /* ex */ )
             {
                 //Log the error (uncomment ex variable name and write a log.
                 ModelState.AddModelError("", "Unable to save changes. " +
@@ -76,8 +73,8 @@ namespace Tp1.Controllers
             }
             return View(user);
         }
-
-        // GET: Users/Edit/5
+        
+        //GET: Users/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -85,7 +82,7 @@ namespace Tp1.Controllers
                 return NotFound();
             }
 
-            var user = await _context.Users.SingleOrDefaultAsync(m => m.ID == id);
+            var user = _unitOfWork.UserRepository.GetById(id);
             if (user == null)
             {
                 return NotFound();
@@ -109,51 +106,59 @@ namespace Tp1.Controllers
             {
                 try
                 {
-                    _context.Update(user);
-                    await _context.SaveChangesAsync();
+                    //_context.Update(user);
+                    //await _context.SaveChangesAsync();
+                    _unitOfWork.UserRepository.Update(user);
+                    _unitOfWork.save();
                 }
-                catch (DbUpdateConcurrencyException)
+                catch (DbUpdateConcurrencyException /* dex */)
                 {
-                    if (!UserExists(user.ID))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
+                    //if (!UserExists(user.ID))
+                    //{
+                    //    return NotFound();
+                    //}
+                    //else
+                    //{
+                    //    throw;
+                    //}
+                    ModelState.AddModelError("", "Unable to update");
                 }
                 return RedirectToAction(nameof(Index));
             }
             return View(user);
         }
-
+        
         // GET: Users/Delete/5
-        public async Task<IActionResult> Delete(int? id)
+        //public async Task<IActionResult> Delete(int? id)
+        public ActionResult Delete(int id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
+            //if (id == null)
+            //{
+            //   return NotFound();
+            //}
 
-            var user = await _context.Users
-                .SingleOrDefaultAsync(m => m.ID == id);
-            if (user == null)
-            {
-                return NotFound();
-            }
+            //var user = await _context.Users
+            //    .SingleOrDefaultAsync(m => m.ID == id);
+            //            var user = _unitOfWork.UserRepository.GetById(id);
+            //           if (user == null)
+            //         {
+            //           return NotFound();
+            //     }
 
-            return View(user);
+            //   return View(user);
+            return View(_unitOfWork.UserRepository.GetById(id));
         }
-
+        
         // POST: Users/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var user = await _context.Users.SingleOrDefaultAsync(m => m.ID == id);
-            _context.Users.Remove(user);
-            await _context.SaveChangesAsync();
+            //var user = await _context.Users.SingleOrDefaultAsync(m => m.ID == id);
+            //_context.Users.Remove(user);
+            //await _context.SaveChangesAsync();
+            _unitOfWork.UserRepository.Delete(id);
+            _unitOfWork.save();
             return RedirectToAction(nameof(Index));
         }
 
@@ -161,5 +166,6 @@ namespace Tp1.Controllers
         {
             return _context.Users.Any(e => e.ID == id);
         }
+
     }
 }
