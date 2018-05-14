@@ -149,12 +149,20 @@ namespace Tp1.Controllers
             //_context.Posts.Remove(post);
             //await _context.SaveChangesAsync();
             _unitOfWork.PostRepository.Delete(id);
+            _unitOfWork.save();
             return RedirectToAction(nameof(Index));
         }
 
-        //private bool PostExists(string id)
-        //{
-        //    return _context.Posts.Any(e => e.ID == id);
-        //}
+        private bool PostExists(string id)
+        {
+            if (_unitOfWork.PostRepository.GetById(id) == null)
+            {
+                return false;
+            }
+            else
+            {
+                return true;
+            }
+        }
     }
 }

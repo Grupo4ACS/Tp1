@@ -164,7 +164,14 @@ namespace Tp1.Controllers
 
         private bool UserExists(int id)
         {
-            return _context.Users.Any(e => e.ID == id);
+            if (_unitOfWork.UserRepository.GetById(id) == null )
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
         }
 
     }
