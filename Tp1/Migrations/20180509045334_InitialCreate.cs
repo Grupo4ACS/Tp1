@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore.Migrations;
+﻿using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using System;
 using System.Collections.Generic;
 
@@ -12,7 +13,8 @@ namespace Tp1.Migrations
                 name: "Users",
                 columns: table => new
                 {
-                    ID = table.Column<string>(nullable: false),
+                    ID = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
                     FirstName = table.Column<string>(nullable: true),
                     LastName = table.Column<string>(nullable: true)
                 },
@@ -25,9 +27,10 @@ namespace Tp1.Migrations
                 name: "Posts",
                 columns: table => new
                 {
-                    ID = table.Column<string>(nullable: false),
+                    ID = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
                     Content = table.Column<string>(nullable: true),
-                    UserID = table.Column<string>(nullable: true)
+                    UserID = table.Column<int>(nullable: true)
                 },
                 constraints: table =>
                 {

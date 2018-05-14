@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
+using Microsoft.EntityFrameworkCore.Storage;
 using Microsoft.EntityFrameworkCore.Storage.Internal;
 using System;
 using Tp1.Data;
@@ -21,12 +22,12 @@ namespace Tp1.Migrations
 
             modelBuilder.Entity("Tp1.Models.Post", b =>
                 {
-                    b.Property<string>("ID")
+                    b.Property<int>("ID")
                         .ValueGeneratedOnAdd();
 
                     b.Property<string>("Content");
 
-                    b.Property<string>("UserID");
+                    b.Property<int?>("UserID");
 
                     b.HasKey("ID");
 
@@ -37,7 +38,7 @@ namespace Tp1.Migrations
 
             modelBuilder.Entity("Tp1.Models.User", b =>
                 {
-                    b.Property<string>("ID")
+                    b.Property<int>("ID")
                         .ValueGeneratedOnAdd();
 
                     b.Property<string>("FirstName");
