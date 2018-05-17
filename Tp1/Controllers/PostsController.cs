@@ -41,12 +41,13 @@ namespace Tp1.Controllers
             //    return NotFound();
             //}
 
-            return View(_unitOfWork.PostRepository.GetById(id));
+            return View(_unitOfWork.PostRepository.Get(p=>p.ID.Equals(id),null,"User").FirstOrDefault());
         }
 
         // GET: Posts/Create
         public IActionResult Create()
         {
+            LoadUsers();
             return View();
         }
 
@@ -55,7 +56,7 @@ namespace Tp1.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("User,Content")] Post post)
+        public async Task<IActionResult> Create([Bind("User,Content,UserID")] Post post)
         {
             if (ModelState.IsValid)
             {
@@ -65,6 +66,7 @@ namespace Tp1.Controllers
                 _unitOfWork.save();
                 return RedirectToAction(nameof(Index));
             }
+            LoadUsers();
             return View(post);
         }
 
@@ -82,6 +84,7 @@ namespace Tp1.Controllers
             {
                 return NotFound();
             }
+            LoadUsers();
             return View(post);
         }
 
@@ -167,6 +170,11 @@ namespace Tp1.Controllers
                 return true;
             }
             
+        }
+
+        private void LoadUsers()
+        {
+            ViewBag.User = new SelectList(_unitOfWork.UserRepository.Get(),"UserID", "LastName");
         }
     }
 }
