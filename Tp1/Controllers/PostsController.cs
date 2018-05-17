@@ -20,7 +20,8 @@ namespace Tp1.Controllers
         }
 
         // GET: Posts
-        public async Task<IActionResult> Index()
+        //public async Task<IActionResult> Index()
+        public ViewResult Index()
         {
             return View(_unitOfWork.PostRepository.Get());
         }
@@ -149,6 +150,7 @@ namespace Tp1.Controllers
             //_context.Posts.Remove(post);
             //await _context.SaveChangesAsync();
             _unitOfWork.PostRepository.Delete(id);
+            _unitOfWork.save();
             return RedirectToAction(nameof(Index));
         }
 
